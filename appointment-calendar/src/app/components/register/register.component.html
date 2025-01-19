@@ -1,0 +1,116 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Administrar Usuarios</h2>
+
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h4 class="mb-3">Registrar Nuevo Usuario</h4>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Nombre</label>
+          <input type="text" id="name" formControlName="name" class="form-control" placeholder="Nombre y apellido"  />
+          <div *ngIf="registerSubmitted && registerForm.get('name')?.invalid" class="text-danger">
+            <div *ngIf="registerForm.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
+            <div *ngIf="registerForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
+            <div *ngIf="registerForm.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 100 caracteres.</div>
+          </div>
+          <div *ngIf="serverValidationErrors?.name" class="text-danger">
+            {{ serverValidationErrors.name }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" formControlName="email" class="form-control" placeholder="email@example.com" />
+        <div *ngIf="registerSubmitted && registerForm.get('email')?.invalid" class="text-danger">
+          <div *ngIf="registerForm.get('email')?.errors?.['required']">El email es obligatorio.</div>
+          <div *ngIf="registerForm.get('email')?.errors?.['email']">Por favor ingresa un email válido.</div>
+        </div>
+        <div *ngIf="serverValidationErrors?.email" class="text-danger">
+          {{ serverValidationErrors.email }}
+        </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" formControlName="password" class="form-control" placeholder="Contraseña" />
+          <div *ngIf="registerSubmitted && registerForm.get('password')?.invalid" class="text-danger">
+            <div *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es obligatoria</div>
+            <div *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe contener al menos 6 caracteres</div>
+          </div>
+          <div *ngIf="serverValidationErrors?.password" class="text-danger">
+            {{ serverValidationErrors.password }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password_confirmation" class="form-label">Confirmar Password</label>
+          <input type="password" id="password_confirmation" formControlName="password_confirmation" class="form-control" placeholder="Repita contraseña"/>
+          <div *ngIf="registerSubmitted && registerForm.get('password_confirmation')?.invalid" class="text-danger">
+            <div *ngIf="registerForm.get('password_confirmation')?.errors?.['required']">La confirmación es obligatoria</div>
+            <div *ngIf="registerForm.get('password_confirmation')?.errors?.['minlength']">La contraseña debe contener al menos 6 caracteres</div>
+          </div>
+          <div *ngIf="registerSubmitted && registerForm.hasError('mismatch')" class="text-danger">
+            Las contraseñas no coinciden
+          </div>
+          <div *ngIf="serverValidationErrors?.password" class="text-danger">
+            {{ serverValidationErrors.password }}
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Registrar Usuario</span>
+          <span *ngIf="isLoading">Cargando...</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <h4 class="m-4 text-center">Usuarios Existentes</h4>
+
+  <div class="card mb-4 table-client" >
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="text-center">Nombre</th>
+          <th class="text-center">Email</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="isLoading; else clientsLoaded">
+          <tr *ngFor="let _ of [1,2,3,4]">
+            <td colspan="1">
+              <div class="placeholder-glow text-center p-3">
+                <span class="placeholder col-9"></span>
+              </div>
+            </td>
+            <td colspan="1">
+              <div class="placeholder-glow text-center p-3">
+                <span class="placeholder col-9"></span>
+              </div>
+            </td>
+            <td colspan="1">
+              <div class="placeholder-glow text-center p-3">
+                <span class="placeholder col-9"></span>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-template #clientsLoaded>
+          <tr *ngFor="let user of users">
+            <td class="text-center">{{ user.name }}</td>
+            <td class="text-center">{{ user.email }}</td>
+            <td class="text-center">
+              <button class="btn btn-danger btn-sm" (click)="deleteUser(user.id!)">Eliminar</button>
+            </td>
+          </tr>
+        </ng-template>
+        </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<h1 class="text-center pt-4">Calendario de citas</h1>
+
+<div class="shadow m-4 p-4 mx-lg-5 px-lg-5 position-relative">
+
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+
+  <div *ngIf="loadingAppointments" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-10 d-flex justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando citas, por favor espere...</span>
+    </div>
+  </div>
+
+  <full-calendar [options]="calendarOptions"></full-calendar>
+
+  <app-appointment-modal-component></app-appointment-modal-component>
+</div>

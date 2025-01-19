@@ -1,0 +1,31 @@
+<nav class="navbar sticky-top bg-dark">
+    <div class="container-fluid">
+      <ul class="navbar-nav d-flex flex-row">
+        <li class="nav-item">
+          <a class="nav-link text-white btn btn-dark fs-4 p-2 " [routerLink]="'/calendar'">Calendario</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white btn btn-dark fs-4 p-2" [routerLink]="'/client'">Clientes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white btn btn-dark fs-4 p-2" [routerLink]="'/service'">Servicios</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto text-center">
+        <li class="nav-item">
+          <button class="nav-link text-white d-flex align-items-center btn btn-dark fs-4 p-0" (click)="logout()">
+            {{ isLoading ? 'Cerrando sesión...' : 'Cerrar sesión' }}
+            <i *ngIf="!isLoading" class="bi bi-power ms-2 fs-3"></i>
+          </button>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white btn btn-dark fs-6 p-0" [routerLink]="'/register'">
+            Registrar usuario
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <router-outlet></router-outlet>
+  
