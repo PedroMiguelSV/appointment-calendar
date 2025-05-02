@@ -64,12 +64,5 @@ Este frontend se comunica con la API Laravel disponible en:
 
 ---
 
-## 👨‍💻 Autor
-Desarrollado por Pedro Miguel  
-🔗 GitHub: @PedroMiguelSV  
-🔗 LinkedIn: Pedro Miguel - LinkedIn
-
----
-
 ## 📃 Licencia
 Este proyecto está bajo la licencia MIT.  
