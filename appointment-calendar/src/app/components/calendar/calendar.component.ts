@@ -65,9 +65,9 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.loadAppointments();
 
-  this.appointmentModalService.reloadAppointments$.subscribe(() => {
+    this.appointmentModalService.reloadAppointments$.subscribe(() => {
     this.loadAppointments();
-  });
+    });
   }
 
   loadAppointments() {

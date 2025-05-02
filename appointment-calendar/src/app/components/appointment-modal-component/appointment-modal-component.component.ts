@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
@@ -11,7 +11,9 @@ import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AppointmentModalService } from '../../services/apointmentModal/appointment-modal.service';
+
 
 @Component({
   selector: 'app-appointment-modal-component',
@@ -21,7 +23,9 @@ import { AppointmentModalService } from '../../services/apointmentModal/appointm
   styleUrl: './appointment-modal-component.component.css'
 })
 
-export class AppointmentModalComponent implements OnInit {
+export class AppointmentModalComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
+
   @ViewChild('appointmentModal')appointmentModal!: TemplateRef<any>;
   appointmentForm: FormGroup;
   clients: ClientModel[] = [];
@@ -76,7 +80,9 @@ export class AppointmentModalComponent implements OnInit {
     this.appointmentModalService.modalState$
     .pipe(
       distinctUntilChanged(),
-      filter((isOpen) => isOpen)
+      filter((isOpen) => isOpen),
+      takeUntil(this.unsubscribe$)
+
     )
     .subscribe(() => {
       const appointment = this.appointmentModalService.getSelectedAppointment();
@@ -116,6 +122,11 @@ export class AppointmentModalComponent implements OnInit {
         this.loadingClients = false;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   loadClientsAndServices(): void {
