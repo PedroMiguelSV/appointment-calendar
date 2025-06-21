@@ -11,9 +11,13 @@ import esLocale from '@fullcalendar/core/locales/es';
 import { AppointmentModalService } from '../../services/apointmentModal/appointment-modal.service';
 import { AppointmentModalComponent } from '../appointment-modal-component/appointment-modal-component.component';
 import { CommonModule } from '@angular/common';
+import { ViewEncapsulation } from '@angular/core';
+
 
 @Component({
   selector: 'app-calendar',
+    encapsulation: ViewEncapsulation.None,
+
   standalone: true,
   imports: [ FullCalendarModule, AppointmentModalComponent, CommonModule],
   templateUrl: './calendar.component.html',
@@ -26,20 +30,20 @@ export class CalendarComponent implements OnInit {
   serverValidationErrors: any = {};
 
   calendarOptions: CalendarOptions = {
-    initialView: 'dayGridMonth',
+    initialView: window.innerWidth < 768 ? 'timeGridDay' : 'dayGridMonth',
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
     slotDuration: '00:30:00', 
     slotLabelInterval: '00:30:00',
     locale: esLocale,
-    editable: true,
     selectable: true,
-    height: 625,
+    height: 480,
+    aspectRatio: 1.35,
     select: this.handleSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     headerToolbar: {
       left: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
       center: 'title',
-      right: 'prevYear,prev next,nextYear today',
+      right: 'prev next today',
     },
     timeZone: 'local',
     eventBackgroundColor: '#0d6efd',
@@ -48,7 +52,8 @@ export class CalendarComponent implements OnInit {
     eventDisplay: 'block',
     eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
     slotLabelFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
-    dayMaxEventRows: true,
+    dayMaxEvents: 2,
+
     allDaySlot: false,
     eventContent: (arg) => {
       const timeText = arg.timeText ? `<b>${arg.timeText}</b>` : '';

@@ -1,0 +1,46 @@
+@media (max-width: 767px) {
+
+
+  .fc-header-toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.5rem;
+  }
+
+  .fc-header-toolbar .fc-toolbar-chunk {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .fc-col-header-cell-cushion {
+    font-size: 0.75rem;
+  }
+
+    /* Orden personalizado: título */
+  .fc-header-toolbar .fc-toolbar-chunk:nth-child(2) { order: 1; } /* Título */
+  .fc-header-toolbar .fc-toolbar-chunk:nth-child(1) { order: 2; } /* Navegación */
+  .fc-header-toolbar .fc-toolbar-chunk:nth-child(3) { order: 3; } /* Vistas */
+
+}
+
+@media (min-height: 767px) {
+  .fc {
+    min-height: 650px !important;
+  }
+}
+
+.fc-timegrid-slot {
+  height: 3.5rem !important; 
+}
+
+.fc-day-today {
+  background-color: #e3f2fd !important;
+}
+
+.fs-7 {
+      font-size: 0.80rem;
+}
+

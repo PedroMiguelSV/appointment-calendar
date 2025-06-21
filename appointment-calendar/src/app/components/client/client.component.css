@@ -1,4 +1,8 @@
 .table-client{
-    max-height: 250px; 
+    max-height: 350px; 
     overflow-y: auto;    
+}
+
+.fs-7 {
+      font-size: 0.80rem;
 }

@@ -1,0 +1,13 @@
+.login-page {
+  height: 100vh;
+}
+
+.login-page > div {
+  height: 100%;
+}
+
+.image-style {
+  background-image: url('/assets/img/image-movil.png'); 
+  background-size: cover; 
+  background-position: center;
+}

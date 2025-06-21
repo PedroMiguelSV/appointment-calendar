@@ -1,126 +1,187 @@
-<div class="container my-4">
-  <h1 class="text-center mb-4">Gestion de clientes</h1>
+<div #formularioCliente class="container-fluid px-3 py-4">
+  <h1 class="text-center mb-4 fs-2">Gestion de clientes</h1>
+  <div class=" mx-md-5 px-xl-5">
+    <div class="row">
+      <div class="col-12 col-lg-10 mx-auto">
+        <div class="card">
+          <div class="card-header bg-dark bg-gradient">
+            <h3 class="text-white fs-4">{{ editingClient ? 'Editar Cliente' : 'Añadir Cliente' }}</h3>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="clientForm" (ngSubmit)="isEditing ? updateClient() : addClient()">
 
-  <div class="card my-4">
-    <div class="card-header bg-dark bg-gradient">
-      <h3 class="text-white">{{ editingClient ? 'Editar Cliente' : 'Añadir Cliente' }}</h3>
+              <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input id="name" type="text" class="form-control" formControlName="name" placeholder="Nombre y Apellido" />
+              <div *ngIf="formSubmitted && clientForm.get('name')?.invalid" class="text-danger">
+                <div *ngIf="clientForm.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
+                <div *ngIf="clientForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
+                <div *ngIf="clientForm.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 100 caracteres.</div>
+              </div>
+              <div *ngIf="serverValidationErrors?.name" class="text-danger">
+                {{ serverValidationErrors.name }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" type="email" class="form-control" formControlName="email" placeholder="email@example.com"/>
+              <div *ngIf="formSubmitted && clientForm.get('email')?.invalid" class="text-danger">
+                <div *ngIf="clientForm.get('email')?.errors?.['required']">El email es obligatorio.</div>
+                <div *ngIf="clientForm.get('email')?.errors?.['email']">Por favor ingresa un email válido.</div>
+              </div>
+                <div *ngIf="serverValidationErrors?.email" class="text-danger">
+                  {{ serverValidationErrors.email }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="phone" class="form-label">Teléfono</label>
+                <input id="phone" type="text" class="form-control" formControlName="phone" placeholder="123456789"/>
+              <div *ngIf="formSubmitted && clientForm.get('phone')?.invalid" class="text-danger">
+                <div *ngIf="clientForm.get('phone')?.errors?.['required']">El teléfono es obligatorio.</div>
+                <div *ngIf="clientForm.get('phone')?.errors?.['pattern']">El teléfono debe contener entre 8 y 15 caracteres.</div>
+              </div>
+                <div *ngIf="serverValidationErrors?.phone" class="text-danger">
+                {{ serverValidationErrors.phone }}
+                </div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                {{ isLoading ? (isEditing ? 'Actualizando...' : 'Cargando...') : (isEditing ? 'Actualizar Cliente' : 'Añadir Cliente') }}
+              </button>        
+              <button *ngIf="isEditing" type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">
+                Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <form [formGroup]="clientForm" (ngSubmit)="isEditing ? updateClient() : addClient()">
 
-        <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+    <div class="row mb-4">
+      <div class="col-12 col-lg-10 mx-auto">
+        <h3 class="m-3 fs-4">Lista de clientes</h3>
 
-        <div class="mb-3">
-          <label for="name" class="form-label">Nombre</label>
-          <input id="name" type="text" class="form-control" formControlName="name" placeholder="Nombre y Apellido" />
-        <div *ngIf="formSubmitted && clientForm.get('name')?.invalid" class="text-danger">
-          <div *ngIf="clientForm.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
-          <div *ngIf="clientForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
-          <div *ngIf="clientForm.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 100 caracteres.</div>
-        </div>
-         <div *ngIf="serverValidationErrors?.name" class="text-danger">
-          {{ serverValidationErrors.name }}
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Buscar cliente</h5>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-search"></i> 
+              </span>
+              <input id="search" name="search" [(ngModel)]="searchQuery" (input)="onSearchInput($event)" class="form-control" 
+              placeholder="Escribe el nombre o numero de teléfono" autocomplete="off" />
+            </div>      
           </div>
         </div>
-        
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input id="email" type="email" class="form-control" formControlName="email" placeholder="email@example.com"/>
-        <div *ngIf="formSubmitted && clientForm.get('email')?.invalid" class="text-danger">
-          <div *ngIf="clientForm.get('email')?.errors?.['required']">El email es obligatorio.</div>
-          <div *ngIf="clientForm.get('email')?.errors?.['email']">Por favor ingresa un email válido.</div>
-        </div>
-          <div *ngIf="serverValidationErrors?.email" class="text-danger">
-            {{ serverValidationErrors.email }}
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12 col-lg-10 mx-auto">
+
+        <!-- Vista tipo tabla (solo visible en pantallas grandes) -->
+        <div class="card table-client d-none d-sm-block" >
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr class="text-center">
+                <th>Nombre</th>
+                <th>Correo electrónico</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf="isLoading; else clientsLoaded">
+                <tr *ngFor="let _ of [1,2,3,4]">
+                  <td colspan="1">
+                    <div class="placeholder-glow text-center p-3">
+                      <span class="placeholder col-9"></span>
+                    </div>
+                  </td>
+                  <td colspan="1">
+                    <div class="placeholder-glow text-center p-3">
+                      <span class="placeholder col-9"></span>
+                    </div>
+                  </td>
+                  <td colspan="1">
+                    <div class="placeholder-glow text-center p-3">
+                      <span class="placeholder col-9"></span>
+                    </div>
+                  </td>
+                  <td colspan="1">
+                    <div class="placeholder-glow text-center p-3">
+                      <span class="placeholder col-9"></span>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+
+              <ng-template #clientsLoaded>
+                <tr *ngFor="let client of clients" class="text-center">
+                  <td>{{ client.name }}</td>
+                  <td>{{ client.email }}</td>
+                  <td>{{ client.phone }}</td>
+                  <td>
+                    <button class="btn btn-primary btn-sm m-1" (click)="editClient(client)">Editar</button>
+                    <button class="btn btn-danger btn-sm" (click)="deleteClient(client.id!)">Borrar</button>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </table>
+          <div *ngIf="!isLoading && clients.length === 0" class="alert alert-info">
+            No se encontraron clientes.
           </div>
         </div>
-        
-        <div class="mb-3">
-          <label for="phone" class="form-label">Teléfono</label>
-          <input id="phone" type="text" class="form-control" formControlName="phone" placeholder="Telefono"/>
-        <div *ngIf="formSubmitted && clientForm.get('phone')?.invalid" class="text-danger">
-          <div *ngIf="clientForm.get('phone')?.errors?.['required']">El teléfono es obligatorio.</div>
-          <div *ngIf="clientForm.get('phone')?.errors?.['pattern']">El teléfono debe contener entre 8 y 15 caracteres.</div>
-        </div>
-          <div *ngIf="serverValidationErrors?.phone" class="text-danger">
-          {{ serverValidationErrors.phone }}
+
+        <!-- Vista tipo tarjeta (solo visible en pantallas pequeñas) -->
+        <div class="table-client d-block d-sm-none fs-7">
+          <div *ngIf="!isLoading && clients.length > 0; else loadingOrEmpty">
+            <div *ngFor="let client of clients" class="card mb-3 shadow-sm border-0">
+              <div class="card px-3 py-2">
+                <div class="row align-items-center m-1">
+                  <div class="col-7 p-0">
+                    <h5 class="fw-semibold mb-1 fs-6">{{ client.name }}</h5>
+                    <p class="mb-0"><i class="bi bi-envelope-fill me-1"></i>{{ client.email }}</p>
+                    <p class="mb-0"><i class="bi bi-telephone-fill me-1"></i>{{ client.phone }}</p>
+                  </div>
+                  <div class="col-5 d-flex justify-content-end p-0">
+                    <button class="btn btn-primary btn-sm m-1" (click)="editClient(client)">Editar</button>
+                    <button class="btn btn-danger btn-sm m-1" (click)="deleteClient(client.id!)">Borrar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
-          {{ isLoading ? (isEditing ? 'Actualizando...' : 'Cargando...') : (isEditing ? 'Actualizar Cliente' : 'Añadir Cliente') }}
-        </button>        
-        <button *ngIf="isEditing" type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">
-          Cancelar
-        </button>
-      </form>
+
+      </div>
     </div>
   </div>
 
-  <div class="card my-4">
-    <div class="card-body">
-      <h5 class="card-title">Buscar cliente</h5>
-      <div class="input-group">
-        <span class="input-group-text">
-          <i class="bi bi-search"></i> 
-        </span>
-        <input id="search" name="search" [(ngModel)]="searchQuery" (input)="onSearchInput($event)" class="form-control" 
-        placeholder="Escribe el nombre o numero de teléfono" autocomplete="off" />
-      </div>      
-    </div>
-  </div>
-  
-  <div class="card mb-4 table-client" >
-    <table class="table table-striped">
-      <thead>
-        <tr class="text-center">
-          <th>Nombre</th>
-          <th>Correo electrónico</th>
-          <th>Teléfono</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngIf="isLoading; else clientsLoaded">
-          <tr *ngFor="let _ of [1,2,3,4]">
-            <td colspan="1">
-              <div class="placeholder-glow text-center p-3">
-                <span class="placeholder col-9"></span>
-              </div>
-            </td>
-            <td colspan="1">
-              <div class="placeholder-glow text-center p-3">
-                <span class="placeholder col-9"></span>
-              </div>
-            </td>
-            <td colspan="1">
-              <div class="placeholder-glow text-center p-3">
-                <span class="placeholder col-9"></span>
-              </div>
-            </td>
-            <td colspan="1">
-              <div class="placeholder-glow text-center p-3">
-                <span class="placeholder col-9"></span>
-              </div>
-            </td>
-          </tr>
-        </ng-container>
-
-        <ng-template #clientsLoaded>
-          <tr *ngFor="let client of clients" class="text-center">
-            <td>{{ client.name }}</td>
-            <td>{{ client.email }}</td>
-            <td>{{ client.phone }}</td>
-            <td>
-              <button class="btn btn-primary btn-sm m-1" (click)="editClient(client)">Editar</button>
-              <button class="btn btn-danger btn-sm" (click)="deleteClient(client.id!)">Borrar</button>
-            </td>
-          </tr>
-        </ng-template>
-      </tbody>
-    </table>
-    <div *ngIf="!isLoading && clients.length === 0" class="alert alert-info">
-      No se encontraron clientes.
-    </div>
-  </div>
 </div>
+
+<ng-template #loadingOrEmpty>
+  <div *ngIf="clients.length === 0 && !isLoading" class="alert alert-info">No se encontraron clientes.</div>
+      <div *ngIf="isLoading" class="row g-4 placeholder-wave">
+        <div class="col-12" *ngFor="let n of [1, 2, 3, 4]">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title placeholder-glow">
+                <span class="placeholder col-12"></span>
+              </h5>
+              <p class="card-text placeholder-glow">
+                <span class="placeholder col-4"></span>
+              </p>
+              <p class="card-text placeholder-glow">
+                <span class="placeholder col-2"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+</ng-template>

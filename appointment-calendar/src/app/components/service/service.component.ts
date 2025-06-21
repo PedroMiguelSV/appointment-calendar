@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServiceService } from '../../services/services/service.service';
 import { ServiceModel } from '../../models/service.model';
@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './service.component.css'
 })
 export class ServiceComponent implements OnInit {
+    @ViewChild('formularioServicio') formularioServicio!: ElementRef;
 
   services: ServiceModel[] = [];
   serviceForm: FormGroup;
@@ -109,6 +110,10 @@ export class ServiceComponent implements OnInit {
     this.formSubmitted = false; 
     this.errorMessage = '';
     this.serverValidationErrors = {};
+
+    setTimeout(() => {
+      this.formularioServicio.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
   }
 
   deleteService(id: number) {

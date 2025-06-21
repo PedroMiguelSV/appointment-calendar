@@ -62,7 +62,7 @@ export class AuthService {
       errorResponse.message = 'Existen errores de validación';
       errorResponse.validationErrors = error.error || {};
     } else if (error.status === 403) {
-      errorResponse.message = error.error.error;
+      errorResponse.validationErrors = error.error.error || {};
     } else if (error.status === 404) {
       errorResponse.message = error.error.error;
     } else if (error.status === 500) {

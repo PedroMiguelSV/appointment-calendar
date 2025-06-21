@@ -1,3 +1,13 @@
 .list-group-item {
     cursor: pointer; 
   }
+
+  .modal-fullscreen-sm-down {
+  max-width: 100%;
+  margin: 0;
+}
+
+.fs-8 {
+  font-size: 0.85rem;
+}
+

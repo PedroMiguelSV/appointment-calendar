@@ -1,130 +1,140 @@
 <ng-template #appointmentModal let-modal class="border-dark">
-  <div class="modal-header bg-dark text-white">
-      <h5 class="modal-title">{{ selectedAppointment ? 'Actualizar Cita' : 'Agendar Nueva Cita' }}</h5>
-      <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="close()"></button>
-  </div>
-  
-  <div class="modal-body">
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-
-    <form [formGroup]="appointmentForm" (ngSubmit)="saveAppointment()">
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="mb-3">
-              <label for="clientSearch" class="form-labe fw-semibold">Cliente</label>
-              <input type="text" class="form-control" id="clientSearch" 
-                [value]="selectedClient ? selectedClient.name + ' - ' + selectedClient.phone : ''" 
-                (input)="searchClients($event)" placeholder="Buscar por nombre o numero de teléfono" autocomplete="off">
-              <div *ngIf="isSubmitting && appointmentForm.get('client_id')?.invalid" class="text-danger">
-                  <div *ngIf="appointmentForm.get('client_id')?.errors?.['required']">
-                    Debes seleccionar un cliente.
-                  </div>
-              </div>
-              <div *ngIf="serverValidationErrors?.client_id" class="text-danger">
-                {{ serverValidationErrors.client_id }}
-              </div>
-            </div>
-          
-          <div *ngIf="loadingClients" class="d-flex align-items-center mb-3">
-            <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-            <span>Cargando clientes...</span>
-          </div>
-          
-          <ul *ngIf="!loadingClients && searchQuery.trim() !== '' && filteredClients.length > 0" class="list-group mb-3">
-            <li class="list-group-item list-group-item-action" *ngFor="let client of filteredClients" (click)="selectClient(client)">
-              {{ client.name }} - {{ client.phone }}
-            </li>
-          </ul>
-          
-          <p *ngIf="!loadingClients && searchQuery.trim() !== '' && filteredClients.length === 0" class="text-muted">
-            No se encontró ningún cliente.
-            <button type="button" class="btn btn-link p-0" (click)="navigateToAddClient()">Agregar Cliente</button>
-          </p>
-          
-          <input type="hidden" formControlName="client_id">
-
-          <div class="mb-3">
-            <label for="serviceSelect" class="form-label fw-semibold">Seleccionar Servicios</label>
-            <div *ngFor="let service of services" class="form-check">
-              <input class="form-check-input" type="checkbox" [value]="service.id" 
-                (change)="toggleService(service.id)" 
-                [checked]="appointmentForm.get('services')?.value?.includes(service.id)">
-              <label class="form-check-label">{{ service.name }}</label>
-            </div>
-            <div *ngIf="isSubmitting && appointmentForm.get('services')?.invalid" class="text-danger">
-              <div *ngIf="appointmentForm.get('services')?.errors?.['required']">
-                Debes seleccionar al menos un servicio.
-              </div>
-            </div>
-            <div *ngIf="serverValidationErrors?.services" class="text-danger">
-              {{ serverValidationErrors.services }}
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="noteInput" class="form-label fw-semibold">Notas</label>
-            <textarea class="form-control" formControlName="note" id="noteInput" rows="3"></textarea>
-            <div *ngIf="isSubmitting && appointmentForm.get('note')?.invalid" class="text-danger">
-              <div *ngIf="appointmentForm.get('note')?.errors?.['maxlength']">
-                La nota no puede contener más de 255 caracteres.
-              </div>
-            </div>
-            <div *ngIf="serverValidationErrors?.note" class="text-danger">
-              {{ serverValidationErrors.note }}
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="dateInput" class="form-label fw-semibold">Fecha</label>
-            <input type="date" class="form-control" formControlName="date" id="dateInput">
-            <div *ngIf="isSubmitting && appointmentForm.get('date')?.invalid" class="text-danger">
-              <div *ngIf="appointmentForm.get('date')?.errors?.['required']">
-              La fecha es requerida.
-              </div>
-            </div>
-            <div *ngIf="serverValidationErrors?.date" class="text-danger">
-              {{ serverValidationErrors.date }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-6 mb-3">
-              <label for="timeInput" class="form-label fw-semibold">Hora</label>
-              <input type="time" class="form-control" formControlName="startTime" id="timeInput">
-              <div *ngIf="isSubmitting && appointmentForm.get('startTime')?.invalid" class="text-danger">
-                  <div *ngIf="appointmentForm.get('startTime')?.errors?.['required']">
-                  La hora es requerida.
-                  </div>
-              </div>
-              <div *ngIf="serverValidationErrors?.startTime" class="text-danger">
-                {{ serverValidationErrors.startTime }}
-              </div>
-            </div>
-
-            <div class="col-6 mb-3">
-              <label class="form-label fw-semibold">Hora Final</label>
-              <input type="time" class="form-control" [value]="hourEnd" readonly>
-            </div>
-          </div>
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+    <div class="modal-content border-0">
+      <div class="modal-header bg-dark text-white px-3 py-2">
+          <h6 class="modal-title">{{ selectedAppointment ? 'Actualizar Cita' : 'Agendar Nueva Cita' }}</h6>
+          <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="close()"></button>
+      </div>
+      
+      <div class="modal-body p-1 p-sm-3 fs-8">
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
         </div>
-      </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary me-auto fw-semibold" (click)="close()" [disabled]="isLoading">
-          {{ isLoading ? 'Cargando...' : 'Cancelar' }}
-          <i class="bi" [ngClass]="{'bi-arrow-repeat': isLoading, 'bi-x-circle': !isLoading}"></i>
-        </button>
-        <button *ngIf="selectedAppointment" type="button" class="btn btn-danger fw-semibold" (click)="deleteAppointment()" [disabled]="isLoading">
-          {{ isLoading ? 'Cargando...' : 'Eliminar Cita' }}
-          <i class="bi" [ngClass]="{'bi-arrow-repeat': isLoading, 'bi-trash': !isLoading}"></i>
-        </button>
-        <button type="submit" class="btn btn-primary fw-semibold" [disabled]="isLoading">
-          {{ isLoading ? 'Cargando...' : (selectedAppointment ? 'Actualizar Cita' : 'Guardar Cita') }}
-          <i class="bi" [ngClass]="{'bi-arrow-repeat': isLoading, 'bi-save': !isLoading}"></i>
-        </button>
+        <form [formGroup]="appointmentForm" (ngSubmit)="saveAppointment()">
+          <div class="card mb-1">
+            <div class="card-body">
+              <div class="mb-3">
+                  <label for="clientSearch" class="form-labe fw-semibold mb-2">Cliente</label>
+                  <input type="text" class="form-control fs-8" id="clientSearch" 
+                    [value]="selectedClient ? selectedClient.name + ' - ' + selectedClient.phone : ''" 
+                    (input)="searchClients($event)" placeholder="Buscar por nombre o numero de teléfono" autocomplete="off">
+                  <div *ngIf="isSubmitting && appointmentForm.get('client_id')?.invalid" class="text-danger">
+                      <div *ngIf="appointmentForm.get('client_id')?.errors?.['required']">
+                        Debes seleccionar un cliente.
+                      </div>
+                  </div>
+                  <div *ngIf="serverValidationErrors?.client_id" class="text-danger">
+                    {{ serverValidationErrors.client_id }}
+                  </div>
+                </div>
+              
+              <div *ngIf="loadingClients" class="d-flex align-items-center mb-3">
+                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                <span>Cargando clientes...</span>
+              </div>
+              
+              <ul *ngIf="!loadingClients && searchQuery.trim() !== '' && filteredClients.length > 0" class="list-group mb-3">
+                <li class="list-group-item list-group-item-action" *ngFor="let client of filteredClients" (click)="selectClient(client)">
+                  {{ client.name }} - {{ client.phone }}
+                </li>
+              </ul>
+              
+              <p *ngIf="!loadingClients && searchQuery.trim() !== '' && filteredClients.length === 0" class="text-muted">
+                No se encontró ningún cliente.
+                <button type="button" class="btn btn-link p-0" (click)="navigateToAddClient()">Agregar Cliente</button>
+              </p>
+              
+              <input type="hidden" formControlName="client_id">
+
+              <div class="mb-2">
+                <label for="serviceSelect" class="form-label fw-semibold">Seleccionar Servicios</label>
+                <div class="row">
+                  <div *ngFor="let service of services; let i = index" class="col-6">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" [value]="service.id" 
+                        (change)="toggleService(service.id)" 
+                        [checked]="appointmentForm.get('services')?.value?.includes(service.id)">
+                      <label class="form-check-label">{{ service.name }}</label>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="isSubmitting && appointmentForm.get('services')?.invalid" class="text-danger">
+                  <div *ngIf="appointmentForm.get('services')?.errors?.['required']">
+                    Debes seleccionar al menos un servicio.
+                  </div>
+                </div>
+                <div *ngIf="serverValidationErrors?.services" class="text-danger">
+                  {{ serverValidationErrors.services }}
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="noteInput" class="form-label fw-semibold">Notas</label>
+                <textarea class="form-control  fs-8" formControlName="note" id="noteInput" rows="3"></textarea>
+                <div *ngIf="isSubmitting && appointmentForm.get('note')?.invalid" class="text-danger">
+                  <div *ngIf="appointmentForm.get('note')?.errors?.['maxlength']">
+                    La nota no puede contener más de 255 caracteres.
+                  </div>
+                </div>
+                <div *ngIf="serverValidationErrors?.note" class="text-danger">
+                  {{ serverValidationErrors.note }}
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="dateInput" class="form-label fw-semibold">Fecha</label>
+                <input type="date" class="form-control  fs-8" formControlName="date" id="dateInput">
+                <div *ngIf="isSubmitting && appointmentForm.get('date')?.invalid" class="text-danger">
+                  <div *ngIf="appointmentForm.get('date')?.errors?.['required']">
+                  La fecha es requerida.
+                  </div>
+                </div>
+                <div *ngIf="serverValidationErrors?.date" class="text-danger">
+                  {{ serverValidationErrors.date }}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-6 mb-1">
+                  <label for="timeInput" class="form-label fw-semibold">Hora</label>
+                  <input type="time" class="form-control fs-8" formControlName="startTime" id="timeInput">
+                  <div *ngIf="isSubmitting && appointmentForm.get('startTime')?.invalid" class="text-danger">
+                      <div *ngIf="appointmentForm.get('startTime')?.errors?.['required']">
+                      La hora es requerida.
+                      </div>
+                  </div>
+                  <div *ngIf="serverValidationErrors?.startTime" class="text-danger">
+                    {{ serverValidationErrors.startTime }}
+                  </div>
+                </div>
+
+                <div class="col-6 mb-1">
+                  <label class="form-label fw-semibold">Hora Final</label>
+                  <input type="time" class="form-control fs-8" [value]="hourEnd" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer d-flex justify-content-between align-content-center p-0">
+            <button type="button" class="btn btn-sm btn-secondary fw-semibold p-1" (click)="close()" [disabled]="isLoading">
+              {{ isLoading ? 'Cargando...' : 'Cancelar' }}
+              <i class="bi" [ngClass]="{'bi-arrow-repeat': isLoading, 'bi-x-circle': !isLoading}"></i>
+            </button>
+            <div>
+              <button *ngIf="selectedAppointment" type="button" class="btn btn-sm btn-danger fw-semibold p-1 me-1" (click)="deleteAppointment()" [disabled]="isLoading">
+                {{ isLoading ? 'Cargando...' : 'Eliminar Cita' }}
+                <i class="bi" [ngClass]="{'bi-arrow-repeat': isLoading, 'bi-trash': !isLoading}"></i>
+              </button>
+              <button type="submit" class="btn btn-sm btn-primary fw-semibold p-1" [disabled]="isLoading">
+                {{ isLoading ? 'Cargando...' : (selectedAppointment ? 'Actualizar Cita' : 'Guardar Cita') }}
+                <i class="bi" [ngClass]="{'bi-arrow-repeat': isLoading, 'bi-save': !isLoading}"></i>
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   </div>
 </ng-template>

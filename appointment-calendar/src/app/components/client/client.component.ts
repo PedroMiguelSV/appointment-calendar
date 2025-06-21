@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'; 
 import { ClientService } from '../../services/clients/client.service';
@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/oper
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
+    @ViewChild('formularioCliente') formularioCliente!: ElementRef;
 
   clients: ClientModel[] = [];
   newClient: ClientModel = { name: '', email: '', phone: '' };
@@ -156,6 +157,10 @@ export class ClientComponent implements OnInit {
     this.formSubmitted = false; 
     this.errorMessage = '';
     this.serverValidationErrors = {};
+
+    setTimeout(() => {
+      this.formularioCliente.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
   }
 
   deleteClient(id: number) {

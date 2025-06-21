@@ -1,16 +1,20 @@
-<h1 class="text-center pt-4">Calendario de citas</h1>
+<div class="container-fluid mb-3">
+  <div class="mx-xl-5 px-xl-5">
+    <h1 class="text-center p-4 fs-2">Calendario de citas</h1>
 
-<div class="shadow m-4 p-4 mx-lg-5 px-lg-5 position-relative">
+    <div class="shadow mx-1 px-1 mx-lg-5 p-lg-4 position-relative">
 
-  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
 
-  <div *ngIf="loadingAppointments" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-10 d-flex justify-content-center align-items-center">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando citas, por favor espere...</span>
+      <div *ngIf="loadingAppointments" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-10 d-flex justify-content-center align-items-center z-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando citas, por favor espere...</span>
+        </div>
+      </div>
+
+      <full-calendar [options]="calendarOptions" class="fs-7"></full-calendar>
+
+      <app-appointment-modal-component></app-appointment-modal-component>
     </div>
   </div>
-
-  <full-calendar [options]="calendarOptions"></full-calendar>
-
-  <app-appointment-modal-component></app-appointment-modal-component>
 </div>

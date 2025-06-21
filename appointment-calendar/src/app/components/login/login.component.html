@@ -1,54 +1,78 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center p-5">
-      <h1 class="display-4">Calendario de citas</h1>
-      <p class="lead">Inicia sesión</p>
-    </div>
+<div class="row g-0 login-page">
+  <!-- Imagen escritorio -->
+  <div class="col-md-6 d-none d-md-flex bg-white">
+    <img src="assets/img/image-desk.png" alt="calendar login" class="img-fluid">
   </div>
 
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-      <div class="card shadow-lg">
-        <div class="card-body p-5">
-          <h2 class="text-center mb-4">Login</h2>
+  <!-- Contenedor de login para escritorio) -->
+  <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center bg-white">
+    <ng-container *ngTemplateOutlet="loginTemplate; context: { isMobile: false }"></ng-container>
+  </div>
 
-          <div *ngIf="errorMessage" class="alert alert-danger">
-            {{ errorMessage }}
+    <!-- Contenedor de login para movil -->
+  <div class="d-block d-md-none d-flex align-items-center justify-content-center px-3 image-style">
+    <ng-container *ngTemplateOutlet="loginTemplate; context: { isMobile: true }"></ng-container>
+  </div>
+</div>
+
+<!-- Template compartido -->
+<ng-template #loginTemplate let-isMobile="isMobile">
+  <div class="w-100">
+    <div class="text-center pb-5">
+      <h1 class="display-6 fw-semibold">Bienvenido de nuevo</h1>
+    </div>
+    <div class="row justify-content-center m-0">
+      <div Class="col-sm-9 col-lg-10 col-xl-6">
+        <div class="card shadow-lg border-0 rounded-4 bg-white">
+          <div class="card-body p-4">
+            <h4 class="text-center mb-4">Iniciar sesión</h4>
+
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <div class="input-group" [ngClass]="{ 'input-group-sm': isMobile }">
+                  <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+                  <input type="email" id="email" formControlName="email" class="form-control" placeholder="email@example.com" />
+                </div>
+                <div *ngIf="loginSubmitted && loginForm.get('email')?.invalid" class="text-danger">
+                  <div *ngIf="loginForm.get('email')?.errors?.['required']">El email es obligatorio.</div>
+                  <div *ngIf="loginForm.get('email')?.errors?.['email']">Por favor ingresa un email válido.</div>
+                </div>
+                <div *ngIf="serverValidationErrors?.email" class="text-danger">{{ serverValidationErrors.email }}</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="input-group" [ngClass]="{ 'input-group-sm': isMobile }">
+                  <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+                  <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" class="form-control"
+                         placeholder="*******" (input)="checkPasswordField()">
+                  <button *ngIf="passwordHasText" type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()">
+                    <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                </div>
+                <div *ngIf="loginSubmitted && loginForm.get('password')?.invalid" class="text-danger">
+                  <div *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es obligatoria</div>
+                  <div *ngIf="loginForm.get('password')?.errors?.['minlength']">La contraseña debe contener al menos 6 caracteres</div>
+                </div>
+                <div *ngIf="serverValidationErrors?.password" class="text-danger">{{ serverValidationErrors.password }}</div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button [ngClass]="isMobile ? 'btn btn-primary btn-sm' : 'btn btn-primary btn-lg'" type="submit" [disabled]="isLoading">
+                  <span *ngIf="!isLoading">Ingresar</span>
+                  <span *ngIf="isLoading">Cargando...</span>
+                </button>
+              </div>
+            </form>
+
           </div>
-
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" id="email" formControlName="email" class="form-control"/>
-              <div *ngIf="loginSubmitted && loginForm.get('email')?.invalid" class="text-danger">
-                <div *ngIf="loginForm.get('email')?.errors?.['required']">El email es obligatorio.</div>
-                <div *ngIf="loginForm.get('email')?.errors?.['email']">Por favor ingresa un email válido.</div>
-              </div>
-              <div *ngIf="serverValidationErrors?.email" class="text-danger">
-                {{ serverValidationErrors.email }}
-              </div>
-            </div>
-            
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" id="password" formControlName="password" class="form-control"/>
-              <div *ngIf="loginSubmitted && loginForm.get('password')?.invalid" class="text-danger">
-                <div *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es obligatoria</div>
-                <div *ngIf="loginForm.get('password')?.errors?.['minlength']">La contraseña debe contener al menos 6 caracteres</div>
-              </div>
-              <div *ngIf="serverValidationErrors?.password" class="text-danger">
-                {{ serverValidationErrors.password }}
-              </div>
-            </div>
-
-            <div class="d-grid gap-2">
-              <button class="btn btn-primary btn-lg" type="submit" [disabled]="isLoading">
-                <span *ngIf="!isLoading">Iniciar sesión</span>
-                <span *ngIf="isLoading">Cargando...</span>
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>
   </div>
+</ng-template>

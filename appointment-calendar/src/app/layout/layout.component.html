@@ -1,29 +1,47 @@
-<nav class="navbar sticky-top bg-dark">
+<nav class="navbar sticky-top navbar-dark bg-dark p-0">
     <div class="container-fluid">
-      <ul class="navbar-nav d-flex flex-row">
+      <ul class="navbar-nav d-flex flex-row fs-5">
         <li class="nav-item">
-          <a class="nav-link text-white btn btn-dark fs-4 p-2 " [routerLink]="'/calendar'">Calendario</a>
+          <a class="nav-link text-white btn btn-dark p-1 p-sm-2  " [routerLink]="'/calendar'">Calendario</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white btn btn-dark fs-4 p-2" [routerLink]="'/client'">Clientes</a>
+          <a class="nav-link text-white btn btn-dark p-1 p-sm-2" [routerLink]="'/client'">Clientes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white btn btn-dark fs-4 p-2" [routerLink]="'/service'">Servicios</a>
+          <a class="nav-link text-white btn btn-dark p-1 p-sm-2" [routerLink]="'/service'">Servicios</a>
         </li>
       </ul>
-      <ul class="navbar-nav ms-auto text-center">
+      <ul class="navbar-nav ms-auto text-center d-none d-sm-flex">
         <li class="nav-item">
-          <button class="nav-link text-white d-flex align-items-center btn btn-dark fs-4 p-0" (click)="logout()">
+          <button class="nav-link text-white d-flex align-items-center btn btn-dark fs-5 p-0" (click)="logout()">
             {{ isLoading ? 'Cerrando sesión...' : 'Cerrar sesión' }}
-            <i *ngIf="!isLoading" class="bi bi-power ms-2 fs-3"></i>
+            <i *ngIf="!isLoading" class="bi bi-power fs-4"></i>
           </button>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white btn btn-dark fs-6 p-0" [routerLink]="'/register'">
+          <a class="nav-link text-white btn btn-dark fs-6 p-0 pb-1" [routerLink]="'/register'">
             Registrar usuario
           </a>
         </li>
       </ul>
+
+      <!-- Botón hamburguesa visible solo en móviles -->
+      <button class="navbar-toggler d-sm-none px-2" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu"
+        aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fs-6"></span>
+      </button>
+
+    </div>
+
+      <!-- Menú colapsable solo en móviles -->
+    <div class="collapse d-md-none bg-dark px-3 w-100" id="mobileMenu">
+      <div class="d-flex justify-content-center">
+        <a class="btn btn-outline-secondary btn-sm text-light mx-2 mb-1 px-2" [routerLink]="'/register'">Registrar usuario</a>
+        <button class="btn btn-outline-secondary btn-sm text-light mx-2 mb-1 px-2" (click)="logout()">
+          {{ isLoading ? 'Cerrando...' : 'Cerrar sesión' }}
+          <i *ngIf="!isLoading" class="bi bi-power ms-2"></i>
+        </button>
+      </div>
     </div>
   </nav>
   

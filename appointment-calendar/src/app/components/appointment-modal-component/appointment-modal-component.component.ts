@@ -107,7 +107,6 @@ export class AppointmentModalComponent implements OnInit, OnDestroy {
   
     this.searchSubject.pipe(
       debounceTime(700),
-      distinctUntilChanged(), 
       filter(query => query.trim() !== ''), 
       switchMap((query) => {
         return this.clientService.searchClients(query); 
@@ -269,7 +268,7 @@ export class AppointmentModalComponent implements OnInit, OnDestroy {
 
   openModal(): void {
     if (this.appointmentModal) {
-      const modalRef = this.modalService.open(this.appointmentModal, { ariaLabelledBy: 'modal-basic-title' });
+      const modalRef = this.modalService.open(this.appointmentModal, { ariaLabelledBy: 'modal-basic-title', centered: true, });
       
       modalRef.result.finally(() => {
         this.appointmentModalService.closeModal();

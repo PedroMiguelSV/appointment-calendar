@@ -1,99 +1,109 @@
-<div class="container my-4">
-  <h1 class="mb-4 text-center">Gestión de Servicios</h1>
-
-  <div class="card mb-4">
-    <div class="card-header bg-dark bg-gradient">
-      <h3 class="text-white">{{ isEditing ? 'Editar Servicio' : 'Crear Nuevo Servicio' }}</h3> 
-    </div>
-    <div class="card-body">
-      <form [formGroup]="serviceForm">
-
-        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-
-        <div class="mb-3">
-          <label for="name" class="form-label">Nombre del Servicio</label>
-          <input formControlName="name" type="text" class="form-control" id="name" placeholder="Nombre del servicio" />
-          <div *ngIf="formSubmitted && serviceForm.get('name')?.invalid" class="text-danger">
-            <div *ngIf="serviceForm.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
-            <div *ngIf="serviceForm.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 100 caracteres.</div>
+<div #formularioServicio class="container-fluid px-3 py-4">
+  <h1 class="mb-4 text-center fs-2">Gestión de Servicios</h1>
+  <div class="mx-md-5 px-md-5">
+    <div class="row">
+      <div class="col-12 col-lg-10 mx-auto">
+        <div class="card">
+          <div class="card-header bg-dark bg-gradient">
+            <h3 class="text-white fs-4">{{ isEditing ? 'Editar Servicio' : 'Crear Nuevo Servicio' }}</h3> 
           </div>
-          <div *ngIf="serverValidationErrors.name" class="text-danger">
-            {{ serverValidationErrors.name }}
-          </div>
-        </div>
+          <div class="card-body">
+            <form [formGroup]="serviceForm">
 
-        <div class="mb-3">
-          <label for="duration" class="form-label">Duración (minutos)</label>
-          <input formControlName="duration" type="number" class="form-control" id="duration" placeholder="Duración en minutos" />
-          <div *ngIf="formSubmitted && serviceForm.get('duration')?.invalid" class="text-danger">
-            <div *ngIf="serviceForm.get('duration')?.errors?.['required']">La duración es obligatoria.</div>
-            <div *ngIf="serviceForm.get('duration')?.errors?.['min']">La duracion debe ser mayor a cero.</div>
-          </div>
-          <div *ngIf="serverValidationErrors.duration" class="text-danger">
-            {{ serverValidationErrors.duration }}
-          </div>
-        </div>
+              <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
-        <div class="mb-3">
-          <label for="precio" class="form-label">Precio</label>
-          <input formControlName="precio" type="number" class="form-control" id="precio" placeholder="Precio en EUR" />
-          <div *ngIf="formSubmitted && serviceForm.get('precio')?.invalid" class="text-danger">
-            <div *ngIf="serviceForm.get('precio')?.errors?.['required']">El precio es obligatorio.</div>
-            <div *ngIf="serviceForm.get('precio')?.errors?.['min']">El precio debe ser mayor a cero.</div>
-          </div>
-          <div *ngIf="serverValidationErrors.precio" class="text-danger">
-            {{ serverValidationErrors.precio }}
-          </div>
-        </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre del Servicio</label>
+                <input formControlName="name" type="text" class="form-control" id="name" placeholder="Nombre del servicio" />
+                <div *ngIf="formSubmitted && serviceForm.get('name')?.invalid" class="text-danger">
+                  <div *ngIf="serviceForm.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
+                  <div *ngIf="serviceForm.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 100 caracteres.</div>
+                </div>
+                <div *ngIf="serverValidationErrors.name" class="text-danger">
+                  {{ serverValidationErrors.name }}
+                </div>
+              </div>
 
-        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="isEditing ? updateService() : createService()">
-        {{ isLoading ? (isEditing ? 'Actualizando...' : 'Cargando...') : (isEditing ? 'Actualizar Servicio' : 'Crear Servicio') }}
-        </button>
-        <button type="button" *ngIf="isEditing" class="btn btn-secondary m-2" (click)="cancelEdit()">Cancelar</button>
-      </form>
-    </div>
-  </div>
+              <div class="mb-3">
+                <label for="duration" class="form-label">Duración (minutos)</label>
+                <input formControlName="duration" type="number" class="form-control" id="duration" placeholder="Duración en minutos" />
+                <div *ngIf="formSubmitted && serviceForm.get('duration')?.invalid" class="text-danger">
+                  <div *ngIf="serviceForm.get('duration')?.errors?.['required']">La duración es obligatoria.</div>
+                  <div *ngIf="serviceForm.get('duration')?.errors?.['min']">La duracion debe ser mayor a cero.</div>
+                </div>
+                <div *ngIf="serverValidationErrors.duration" class="text-danger">
+                  {{ serverValidationErrors.duration }}
+                </div>
+              </div>
 
-  <div *ngIf="isLoading" class="row g-4 placeholder-wave">
-    <div class="col-sm-12 col-md-6" *ngFor="let n of [1, 2, 3, 4]">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title placeholder-glow">
-            <span class="placeholder col-12"></span>
-          </h5>
-          <p class="card-text placeholder-glow">
-            <span class="placeholder col-4"></span>
-          </p>
-          <p class="card-text placeholder-glow">
-            <span class="placeholder col-2"></span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+              <div class="mb-3">
+                <label for="precio" class="form-label">Precio</label>
+                <input formControlName="precio" type="number" class="form-control" id="precio" placeholder="9.99 €" />
+                <div *ngIf="formSubmitted && serviceForm.get('precio')?.invalid" class="text-danger">
+                  <div *ngIf="serviceForm.get('precio')?.errors?.['required']">El precio es obligatorio.</div>
+                  <div *ngIf="serviceForm.get('precio')?.errors?.['min']">El precio debe ser mayor a cero.</div>
+                </div>
+                <div *ngIf="serverValidationErrors.precio" class="text-danger">
+                  {{ serverValidationErrors.precio }}
+                </div>
+              </div>
 
-  <div *ngIf="!isLoading && services.length">
-    <h3 class="mb-3">Lista de Servicios</h3>
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-      <div class="col" *ngFor="let service of services">
-        <div class="card h-100">
-          <div class="card-body d-flex justify-content-between align-items-center">
-            <div>
-              <h5 class="card-title">{{ service.name }}</h5>
-              <p class="card-text">Duración: {{ service.duration }} minutos</p>
-              <p class="card-text">Precio: €{{ service.precio }}</p>
-            </div>
-            <div class="ms-auto">
-              <button class="btn btn-primary btn-md m-1" (click)="editService(service)">Editar</button>
-              <button class="btn btn-danger btn-md m-1" (click)="deleteService(service.id!)">Borrar</button>
-            </div>
+              <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="isEditing ? updateService() : createService()">
+              {{ isLoading ? (isEditing ? 'Actualizando...' : 'Cargando...') : (isEditing ? 'Actualizar Servicio' : 'Crear Servicio') }}
+              </button>
+              <button type="button" *ngIf="isEditing" class="btn btn-secondary m-2" (click)="cancelEdit()">Cancelar</button>
+            </form>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div *ngIf="!isLoading && !services.length" class="alert alert-warning" role="alert">
-    No hay servicios disponibles.
+    <div class="row mb-4">
+      <div class="col-12 col-lg-10 mx-auto">
+        <h3 class="m-3 fs-4">Lista de servicios</h3>
+
+        <div *ngIf="isLoading" class="row g-4 placeholder-wave">
+          <div class="col-sm-12 col-md-6" *ngFor="let n of [1, 2, 3, 4]">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title placeholder-glow">
+                  <span class="placeholder col-12"></span>
+                </h5>
+                <p class="card-text placeholder-glow">
+                  <span class="placeholder col-4"></span>
+                </p>
+                <p class="card-text placeholder-glow">
+                  <span class="placeholder col-2"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoading && services.length">
+          <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col" *ngFor="let service of services">
+              <div class="card h-100">
+                <div class="card-body d-flex align-items-center p-2">
+                  <div class="col-7">
+                    <h5 class="card-title">{{ service.name }}</h5>
+                    <p class="card-text m-0 fs-6">Duración: {{ service.duration }} minutos</p>
+                    <p class="card-text fs-6">Precio: €{{ service.precio }}</p>
+                  </div>
+                  <div class="col-5 d-flex justify-content-end">
+                    <button class="btn btn-primary btn-sm m-1" (click)="editService(service)">Editar</button>
+                    <button class="btn btn-danger btn-sm m-1" (click)="deleteService(service.id!)">Borrar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoading && !services.length" class="alert alert-warning" role="alert">
+          No hay servicios disponibles.
+        </div>
+      </div>
+    </div>
   </div>
 </div>

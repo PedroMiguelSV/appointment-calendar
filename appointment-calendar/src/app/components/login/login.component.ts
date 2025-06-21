@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, TitleStrategy } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
@@ -18,7 +18,9 @@ export class LoginComponent {
   loginSubmitted = false;
   isLoading = false;
   errorMessage: string = '';  
-  serverValidationErrors: any = {};  
+  serverValidationErrors: any = {};
+  showPassword = false;
+  passwordHasText = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -69,8 +71,18 @@ export class LoginComponent {
     }
   }
 
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  checkPasswordField() {
+    const password = this.loginForm.get('password')?.value;
+    this.passwordHasText = !!password?.trim();
+  }
+  
   private handleError(error: any) {
     this.errorMessage = error.message || 'Ocurrió un error inesperado.';
     this.serverValidationErrors = error.validationErrors || {};
   }
+
 }
