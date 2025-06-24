@@ -22,27 +22,29 @@ This frontend connects to the Laravel API available at:
 
 ## 🖼️ Preview
 
-<h3 align="center">Login screen: 💻 Desktop - 📱 Mobile</h3>
-
 <div align="center">
-  <img src="./screenshots/desktop/login_desktop.png" alt="Login Desktop" style="max-height: 23rem; border-radius: 8px;" />
-  &nbsp;&nbsp;
-  <img src="./screenshots/movil/login_movil.png" alt="Login Mobile" style="max-height: 23rem; border-radius: 8px;" />
+  <h3>Login screen: 💻 Desktop - 📱 Mobile</h3>
+  <img src="./screenshots/desktop/login_desktop.png" alt="Login Desktop" width="100% />
 </div>
 
 <div align="center">
    <h3>🔐 Login, calendar, and modal</h3>
-   <img src="./screenshots/gifs/desktop.gif" alt="App Desktop" style="max-height: 30rem; border-radius: 8px;" />
+   <img src="./screenshots/gifs/desktop.gif" alt="App Desktop" width="100%" />
 </div>
 
 <div align="center">
    <h3>👥 Client management</h3>
-   <img src="./screenshots/gifs/clients.gif" alt="Clients GIF" style="max-height: 30rem; border-radius: 8px;" />
+   <img src="./screenshots/gifs/clients.gif" alt="Clients GIF" width="100%" />
 </div>
 
 <div align="center">
    <h3>💈 Service management</h3>
-   <img src="./screenshots/gifs/services.gif" alt="Services GIF" style="max-height: 30rem; border-radius: 8px;" />
+   <img src="./screenshots/gifs/services.gif" alt="Services GIF" width="100%" />
+</div>
+
+<div align="center">
+   <h3>💈 Mobile view</h3>
+  <img src="./screenshots/gifs/mobile.gif" alt="Mobile GIF" width="100%" />
 </div>
 
 ---
